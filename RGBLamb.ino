@@ -24,6 +24,16 @@ Adafruit_NeoPixel strip = Adafruit_NeoPixel(144, PIN, NEO_RGB + NEO_KHZ800);
 int pushCounter;
 const int pushButton = 12;
 
+//variables for disco
+int vol = 0;
+float total = 0;
+int fadeCol = 0;
+int val[25];
+int volLast = 0;
+int fadeAmt = 0;
+int counter = 0;
+//fadeThickness = 0;  // CHANGE THICKNESS (0-10)
+
 void setup() {
   // This is for Trinket 5V 16MHz, you can remove these three lines if you are not using a Trinket
   #if defined (__AVR_ATtiny85__)
@@ -41,7 +51,6 @@ void setup() {
 }
 
 void loop() {
-  
   /*
   if(digitalRead(pushButton)){
     // 0 = rainbow
@@ -56,8 +65,8 @@ void loop() {
     delay(500);
   }*/
 
-  Serial.print("Push counter at ");
-  Serial.println(pushCounter);
+  //Serial.print("Push counter at ");
+  //Serial.println(pushCounter);
   
   switch (pushCounter) {
     case 0: //rainbow
@@ -70,6 +79,7 @@ void loop() {
       lightOn(strip.Color(255, 103, 23));
       break;
     case 3: //disco
+      disco();
       break;
     default:
       break;
@@ -97,6 +107,19 @@ void lightOn(uint32_t color){
         strip.show();
     }  
 }
+
+
+void disco() {
+  
+      vol = analogRead(A0);
+      
+      Serial.println(vol);
+      delay(50);
+  
+}
+
+
+
 // Fill the dots one after the other with a color
 void colorWipe(uint32_t c, uint8_t wait) {
   for(uint16_t i=0; i<strip.numPixels(); i++) {
