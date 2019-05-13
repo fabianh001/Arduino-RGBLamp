@@ -9,6 +9,9 @@
 #define LED_PIN 1 // = D1 since ESP is used for the project
 //The pin that is used for other modes. 
 #define PIN_GPIO 5 // GPIO05 = D1. But in this case we care about GPIO pin
+//GPIO pin that has button attached to
+#define BUTTON_GPIO 12
+
 //Arduino loop delay
 #define DELAY 1
 
@@ -98,27 +101,29 @@ Adafruit_NeoPixel strip = Adafruit_NeoPixel(NUM_LEDS, PIN_GPIO, NEO_RGB + NEO_KH
 // and minimize distance between Arduino and first pixel.  Avoid connecting
 // on a live circuit...if you must, connect GND first.
 
-//button
-//mode for program
-int mode = 0;
-//GPIO pin button is attached to
-const int pushButton = 12;
+//boolean indicating if button was pressed
+boolean buttonPressed = false;
 
+//Intial mode we have when starting up
+int selectedMode = 1;
 
 void setup() {
   strip.begin();
   strip.setBrightness(50);
   strip.show(); // Initialize all pixels to 'off'
   Serial.begin(9600);
+
+  // initialize the pushbutton pin as an input:
+  pinMode(BUTTON_GPIO, INPUT);
   
   //disco 
   FastLED.addLeds<NEOPIXEL, LED_PIN>(leds, NUM_LEDS);
   //FastLED.setMaxPowerInVoltsAndMilliamps(5,7000);
   FastLED.setBrightness(50); 
   for (int i = 0; i < NUM_LEDS; i++) 
-    leds[i] = CRGB(0, 0, 255);
+    leds[i] = CRGB(0, 0, 0);
   FastLED.show(); 
-  delay(5000);
+  delay(2000);
 
   //bootstrap average with some low values
   for (int i = 0; i < AVGLEN; i++) {  
@@ -134,39 +139,47 @@ void setup() {
 }
 
 void loop() {
-  /*
-  if(digitalRead(pushButton)){
-    // 0 = rainbow
-    // 1 = cold white light 
-    // 2 =  warm white light
-    // 3 = disco mode
-    if(mode >= 3){
-      mode = 0;
-    } else {
-      mode++;
-    }
-    delay(500);
-  }*/
-
-  //Serial.print("Push counter at ");
-  //Serial.println(pushCounter);
   
-  switch (mode) {
-    case 0: //rainbow
-      rainbowCycle(20);
-      break;
-    case 1: //cold white
+  if(digitalRead(BUTTON_GPIO) && !buttonPressed){
+    buttonPressed = true;
+    for (int i = 0; i < NUM_LEDS; i++) 
+      leds[i] = CRGB(0, 0, 0);
+    
+    if(selectedMode >= 3){
+      selectedMode = 0;
+    } else {
+      selectedMode++;
+    }
+    Serial.print("Mode is ");
+    Serial.println(selectedMode);
+  }
+
+ 
+  // 0 = cold white light 
+  // 1 =  warm white light
+  // 2 = rainbow
+  // 3 = disco mode
+  switch (selectedMode) {
+    case 0: //cold white
       lightOn(strip.Color(255, 250, 250));
       break;
-    case 2: //warm white
+    case 1: //warm white
       lightOn(strip.Color(255, 103, 23));
+      break;
+    case 2: //rainbow
+      rainbowCycle(20);
+      buttonPressed = false;
       break;
     case 3: //disco
       visualize_music();
       break;
     default:
       break;
-  } 
+  }
+  
+  if(!digitalRead(BUTTON_GPIO)){
+    buttonPressed = false;
+  }
   delay(DELAY);       // delay in between reads for stability   
 }
 
@@ -190,6 +203,12 @@ void rainbow(uint8_t wait) {
   uint16_t i, j;
 
   for(j=0; j<256; j++) {
+   
+    //break loop if button press was detected
+    if (digitalRead(BUTTON_GPIO) ){
+      return;
+    }
+    
     for(i=0; i<strip.numPixels(); i++) {
       strip.setPixelColor(i, Wheel((i+j) & 255));
     }
@@ -201,8 +220,20 @@ void rainbow(uint8_t wait) {
 // Slightly different, this makes the rainbow equally distributed throughout
 void rainbowCycle(uint8_t wait) {
   uint16_t i, j;
-
+  boolean buttonPressed = true;
+  
   for(j=0; j<256*5; j++) { // 5 cycles of all colors on wheel
+
+    //if button is released
+    if (!digitalRead(BUTTON_GPIO)) {
+      buttonPressed = false;
+    }
+    
+    //break loop if button press was detected
+    if (digitalRead(BUTTON_GPIO) && !buttonPressed){
+      return;
+    }
+    
     for(i=0; i< strip.numPixels(); i++) {
       strip.setPixelColor(i, Wheel(((i * 256 / strip.numPixels()) + j) & 255));
     }
@@ -214,6 +245,12 @@ void rainbowCycle(uint8_t wait) {
 //Theatre-style crawling lights.
 void theaterChase(uint32_t c, uint8_t wait) {
   for (int j=0; j<10; j++) {  //do 10 cycles of chasing
+
+    
+    //break loop if button press was detected
+    if (digitalRead(BUTTON_GPIO)){
+      return;
+    }
     for (int q=0; q < 3; q++) {
       for (uint16_t i=0; i < strip.numPixels(); i=i+3) {
         strip.setPixelColor(i+q, c);    //turn every third pixel on
@@ -233,6 +270,12 @@ void theaterChase(uint32_t c, uint8_t wait) {
 void theaterChaseRainbow(uint8_t wait) {
   for (int j=0; j < 256; j++) {     // cycle all 256 colors in the wheel
     for (int q=0; q < 3; q++) {
+
+      //break loop if button press was detected
+      if (digitalRead(BUTTON_GPIO) ){
+        return;
+      }
+      
       for (uint16_t i=0; i < strip.numPixels(); i=i+3) {
         strip.setPixelColor(i+q, Wheel( (i+j) % 255));    //turn every third pixel on
       }
