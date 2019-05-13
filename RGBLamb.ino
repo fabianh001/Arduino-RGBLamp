@@ -105,7 +105,7 @@ Adafruit_NeoPixel strip = Adafruit_NeoPixel(NUM_LEDS, PIN_GPIO, NEO_RGB + NEO_KH
 boolean buttonPressed = false;
 
 //Intial mode we have when starting up
-int selectedMode = 1;
+int selectedMode = 0;
 
 void setup() {
   strip.begin();
@@ -161,10 +161,10 @@ void loop() {
   // 3 = disco mode
   switch (selectedMode) {
     case 0: //cold white
-      lightOn(strip.Color(255, 250, 250));
+      lightOn(255, 250, 250);
       break;
     case 1: //warm white
-      lightOn(strip.Color(255, 103, 23));
+      lightOn(255, 147, 41);   //255, 172, 68 //http://planetpixelemporium.com/tutorialpages/light.html
       break;
     case 2: //rainbow
       rainbowCycle(20);
@@ -184,11 +184,11 @@ void loop() {
 }
 
 
-void lightOn(uint32_t color){
-  for(uint16_t i=0; i<strip.numPixels(); i++){
-        strip.setPixelColor(i, color);
-        strip.show();
-    }  
+void lightOn(byte r, byte g, byte b){
+  for (int i = 0; i < NUM_LEDS; i++){ 
+      leds[i] = CRGB(r, g, b);    
+  }
+  FastLED.show(); 
 }
 // Fill the dots one after the other with a color
 void colorWipe(uint32_t c, uint8_t wait) {
