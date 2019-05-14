@@ -1,4 +1,4 @@
-# Arduino-RBGLamp
+# Arduino-RGBLamp
 
 This repositiry is about my nice lamp I build for my desk. My lamp features several modes, including rainbow, study, reading and disco mode.
 Those modes can be changed by just pressing a button.
