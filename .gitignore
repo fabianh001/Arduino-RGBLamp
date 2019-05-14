@@ -1,5 +1,8 @@
 #Fritzing file#
 .fzz
+#json and other stuff#
+.json
+.bin
 
 # OS generated files #
 ######################
