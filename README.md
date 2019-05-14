@@ -20,6 +20,7 @@ Any other Arduino should be working for this project, too.
 - 1000μF Capacitor
 
 ## Wiring
+&nbsp; 
 
 ![Fritzing](https://github.com/fabianh001/Arduino-RGBLamp/blob/master/fritzing.png)
 
