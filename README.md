@@ -1,9 +1,9 @@
 # Arduino-RGBLamp
 
-This repository is about a nice lamp I made for my desk. My lamp features several modes, including rainbow, study, reading and disco mode.
-Those modes can be simply changed by just pressing a button.
-The project is based on a ESP (Node MCU v1) and a WS2812 LED strip. 
-Any other Arduino should be working for this project, too.
+This repository is about a nice lamp I made for my desk. My lamp features several modes, including rainbow, study, reading and disco mode. </br>
+Those modes can be simply changed by pressing a button. </br>
+The project is based on a ESP (Node MCU v1) and a WS2812 LED strip. </br>
+Any other Arduino should be working for this project, too. </br>
 
 ## Part List
 
