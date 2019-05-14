@@ -19,7 +19,12 @@ Any other Arduino should be working in this project, too.
 - 300Ω - 500Ω Resistor
 - 1000μF Capacitor
 
-##Wiring
+## Wiring
 
 ![alt text](https://github.com/fabianh001/Arduino-RBGLamp/layout.png)
+
+## Code
+For this project you need to download and install the [FastLED](https://github.com/FastLED/FastLED) library. Refer to the library's [ESP notes](https://github.com/FastLED/FastLED/wiki/ESP8266-notes) to get the library properly working with an ESP.
+
+
 
