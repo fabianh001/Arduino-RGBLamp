@@ -24,16 +24,16 @@
 #define MIC_HIGH 1024.0
 /** Other macros */
 //How many previous sensor values effects the operating average?
-#define AVGLEN 15
+#define AVGLEN 5
 //How many previous sensor values decides if we are on a peak/HIGH (e.g. in a song)
-#define LONG_SECTOR 5
+#define LONG_SECTOR 20
 
 //Mneumonics
 #define HIGH  3
 #define NORMAL 2
 
 //How long do we keep the "current average" sound, before restarting the measuring
-#define MSECS 2000
+#define MSECS 30 * 1000
 #define CYCLES MSECS / DELAY
 
 /*Sometimes readings are wrong or strange. How much is a reading allowed
@@ -105,7 +105,7 @@ Adafruit_NeoPixel strip = Adafruit_NeoPixel(NUM_LEDS, PIN_GPIO, NEO_RGB + NEO_KH
 boolean buttonPressed = false;
 
 //Intial mode we have when starting up
-int selectedMode = 0;
+int selectedMode = 2;
 
 void setup() {
   strip.begin();
@@ -123,7 +123,7 @@ void setup() {
   for (int i = 0; i < NUM_LEDS; i++) 
     leds[i] = CRGB(0, 0, 0);
   FastLED.show(); 
-  delay(2000);
+  delay(500);
 
   //bootstrap average with some low values
   for (int i = 0; i < AVGLEN; i++) {  
