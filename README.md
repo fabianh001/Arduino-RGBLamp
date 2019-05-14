@@ -21,7 +21,7 @@ Any other Arduino should be working for this project, too.
 
 ## Wiring
 
-![Fritzing](https://github.com/fabianh001/Arduino-RBGLamp/wiring.png)
+![Fritzing](https://github.com/fabianh001/Arduino-RBGLamp/fritzing.png)
 
 | ESP Pin       | Description      
 |:-------------:|:----------:|
