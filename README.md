@@ -1,7 +1,7 @@
 # Arduino-RGBLamp
 
-This repository is about a nice lamp I build for my desk. My lamp features several modes, including rainbow, study, reading and disco mode.
-Those modes can be changed by just pressing a button.
+This repository is about a nice lamp I made for my desk. My lamp features several modes, including rainbow, study, reading and disco mode.
+Those modes can be simply changed by just pressing a button.
 The project is based on a ESP (Node MCU v1) and a WS2812 LED strip. 
 Any other Arduino should be working for this project, too.
 
@@ -34,5 +34,5 @@ Any other Arduino should be working for this project, too.
 ## Code
 For this project you need to download and install the [FastLED](https://github.com/FastLED/FastLED) library. Refer to the library's [ESP notes](https://github.com/FastLED/FastLED/wiki/ESP8266-notes) to get the library properly working with an ESP.
 
-A lot of code for disco mode is based on hansjny's [sound reactive LED strip project](https://github.com/hansjny/Natural-Nerd/blob/master/arduino/soundsread2/sound_reactive.ino). Don't forget to check it out.
+The original repository I used for the lamp's disco mode is hansjny's [sound reactive LED strip project](https://github.com/hansjny/Natural-Nerd/blob/master/arduino/soundsread2/sound_reactive.ino). Don't forget to check it out.
 
