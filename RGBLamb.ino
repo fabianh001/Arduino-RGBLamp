@@ -7,15 +7,13 @@
 
 //The pin that controls the LEDs for Disco (FastLED)
 #define LED_PIN 1 // = D1 since ESP is used for the project
-//The pin that is used for other modes. 
-#define PIN_GPIO 5 // GPIO05 = D1. But in this case we care about GPIO pin
-//GPIO pin that has button attached to
+
+//The pin that is used for other modes. Use GPIO description of the pin here 
 #define BUTTON_GPIO 12
 
 //Arduino loop delay
 #define DELAY 1
 
-//variables for DISCO
 //The pin that we read sensor values form
 #define ANALOG_READ 0
 
@@ -86,48 +84,29 @@ struct color {
 struct time_keeping high;
 struct color Color; 
 
+//Boolean for choosing disco mode
 boolean twoDirections;
-// Parameter 1 = number of pixels in strip
-// Parameter 2 = Arduino pin number (most are valid)
-// Parameter 3 = pixel type flags, add together as needed:
-//   NEO_KHZ800  800 KHz bitstream (most NeoPixel products w/WS2812 LEDs)
-//   NEO_KHZ400  400 KHz (classic 'v1' (not v2) FLORA pixels, WS2811 drivers)
-//   NEO_GRB     Pixels are wired for GRB bitstream (most NeoPixel products)
-//   NEO_RGB     Pixels are wired for RGB bitstream (v1 FLORA pixels, not v2)
-//   NEO_RGBW    Pixels are wired for RGBW bitstream (NeoPixel RGBW products)
-Adafruit_NeoPixel strip = Adafruit_NeoPixel(NUM_LEDS, PIN_GPIO, NEO_RGB + NEO_KHZ800);
-
-// IMPORTANT: To reduce NeoPixel burnout risk, add 1000 uF capacitor across
-// pixel power leads, add 300 - 500 Ohm resistor on first pixel's data input
-// and minimize distance between Arduino and first pixel.  Avoid connecting
-// on a live circuit...if you must, connect GND first.
-
-//boolean indicating if button was pressed
+//Boolean indicating if button was pressed
 boolean buttonPressed = false;
-
 //Intial mode we have when starting up
 int selectedMode = 2;
 
 void setup() {
-  strip.begin();
-  
-  strip.show(); // Initialize all pixels to 'off'
   Serial.begin(9600);
 
-  // initialize the pushbutton pin as an input:
+  //Initialize the pushbutton pin as an input:
   pinMode(BUTTON_GPIO, INPUT);
   
-  //disco 
   FastLED.addLeds<NEOPIXEL, LED_PIN>(leds, NUM_LEDS);
-  //FastLED.setMaxPowerInVoltsAndMilliamps(5,7000);
   FastLED.setBrightness(80);
-  strip.setBrightness(80); 
+
+  //Turn off all LEDs
   for (int i = 0; i < NUM_LEDS; i++) 
     leds[i] = CRGB(0, 0, 0);
   FastLED.show(); 
-  delay(500);
+  delay(1000);
 
-  //bootstrap average with some low values
+  //Bootstrap average with some low values
   for (int i = 0; i < AVGLEN; i++) {  
     insert(250, avgs, AVGLEN);
   }
@@ -142,37 +121,45 @@ void setup() {
 
 void loop() {
   
+  //If button is pressed change mode
   if(digitalRead(BUTTON_GPIO) && !buttonPressed){
     buttonPressed = true;
+
+    //Turn off all LEDs
     for (int i = 0; i < NUM_LEDS; i++) 
       leds[i] = CRGB(0, 0, 0);
     
-    if(selectedMode >= 4){ //put number of modes here
+    if(selectedMode >= 4){ //Put number of modes here
       selectedMode = 0;
     } else {
       selectedMode++;
     }
-    Serial.print("Mode is ");
-    Serial.println(selectedMode);
+
+    //Serial.print("Mode is ");
+    //Serial.println(selectedMode);
   }
 
  
-  // 0 = cold white light 
-  // 1 =  warm white light
-  // 2 = rainbow
-  // 3 = disco mode
+  /* 
+  0: cold white light 
+  1:  warm white light
+  2: rainbow
+  3: disco mode v1
+  4: disco mode v2
+  */
+
   switch (selectedMode) {
-    case 0: //cold white
+    case 0: 
       lightOn(255, 250, 250);
       break;
-    case 1: //warm white
-      lightOn(255, 147, 41);   //255, 172, 68 //http://planetpixelemporium.com/tutorialpages/light.html
+    case 1: 
+      lightOn(255, 147, 41); //Good source: http://planetpixelemporium.com/tutorialpages/light.html
       break;
-    case 2: //rainbow
+    case 2: 
       rainbowCycle(20);
       buttonPressed = false;
       break;
-    case 3: //disco
+    case 3: 
       twoDirections = true;
       visualize_music(twoDirections);
       break;
@@ -183,10 +170,13 @@ void loop() {
       break;
   }
   
+  //If button was released
   if(!digitalRead(BUTTON_GPIO)){
     buttonPressed = false;
   }
-  delay(DELAY);       // delay in between reads for stability   
+
+  //Delay in between reads for stability   
+  delay(DELAY);       
 }
 
 
@@ -197,44 +187,46 @@ void lightOn(byte r, byte g, byte b){
   FastLED.show(); 
 }
 
-// Slightly different, this makes the rainbow equally distributed throughout
+
 void rainbowCycle(uint8_t wait) {
   uint16_t i, j;
+
+  //Assume that button was not released when entering funcion
   boolean buttonPressed = true;
   
   for(j=0; j<256*5; j++) { // 5 cycles of all colors on wheel
 
-    //if button is released
+    //If button is released
     if (!digitalRead(BUTTON_GPIO)) {
       buttonPressed = false;
     }
     
-    //break loop if button press was detected
+    //Break loop if button press was detected
     if (digitalRead(BUTTON_GPIO) && !buttonPressed){
       return;
     }
     
     for(i=0; i< NUM_LEDS; i++) {
-      leds[i] = Wheel(((i * 256 / NUM_LEDS + j) & 255));
+      leds[i] = wheel(((i * 256 / NUM_LEDS + j) & 255));
     }
     FastLED.show();
     delay(wait);
   }
 }
 
-// Input a value 0 to 255 to get a color value.
-// The colours are a transition r - g - b - back to r.
-uint32_t Wheel(byte WheelPos) {
-  WheelPos = 255 - WheelPos;
-  if(WheelPos < 85) {
-    return strip.Color(255 - WheelPos * 3, 0, WheelPos * 3);
+//Input a value 0 to 255 to get a color value.
+//The colours are a transition r - g - b - back to r.
+CRGB wheel(byte wheelPos) {
+  wheelPos = 255 - wheelPos;
+  if(wheelPos < 85) {
+    return CRGB(255 - wheelPos * 3, 0, wheelPos * 3);
   }
-  if(WheelPos < 170) {
-    WheelPos -= 85;
-    return strip.Color(0, WheelPos * 3, 255 - WheelPos * 3);
+  if(wheelPos < 170) {
+    wheelPos -= 85;
+    return CRGB(0, wheelPos * 3, 255 - wheelPos * 3);
   }
-  WheelPos -= 170;
-  return strip.Color(WheelPos * 3, 255 - WheelPos * 3, 0);
+  wheelPos -= 170;
+  return CRGB(wheelPos * 3, 255 - wheelPos * 3, 0);
 }
 
 
