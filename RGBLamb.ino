@@ -86,6 +86,7 @@ struct color {
 struct time_keeping high;
 struct color Color; 
 
+boolean twoDirections;
 // Parameter 1 = number of pixels in strip
 // Parameter 2 = Arduino pin number (most are valid)
 // Parameter 3 = pixel type flags, add together as needed:
@@ -171,7 +172,8 @@ void loop() {
       buttonPressed = false;
       break;
     case 3: //disco
-      visualize_music();
+      twoDirections = true;
+      visualize_music(twoDirections);
       break;
     default:
       break;
@@ -337,7 +339,7 @@ void check_high(int avg) {
 }
 
 //Main function for visualizing the sounds in the lamp
-void visualize_music() {
+void visualize_music(boolean twoDirections) {
   int sensor_value, mapped, avg, longavg;
   
   //Actual sensor value
@@ -383,42 +385,83 @@ void visualize_music() {
     Color.b = 6;
     Color.g = -2;
   }
-
-  //Decides how many of the LEDs will be lit
-  curshow = fscale(MIC_LOW, MIC_HIGH, 0.0, (float)NUM_LEDS, (float)avg, -1);
-
-  /*Set the different leds. Control for too high and too low values.
-          Fun thing to try: Dont account for overflow in one direction, 
-    some interesting light effects appear! */
-  for (int i = 0; i < NUM_LEDS; i++) 
-    //The leds we want to show
-    if (i < curshow) {
-      if (leds[i].r + Color.r > 255)
-        leds[i].r = 255;
-      else if (leds[i].r + Color.r < 0)
-        leds[i].r = 0;
-      else
-        leds[i].r = leds[i].r + Color.r;
-          
-      if (leds[i].g + Color.g > 255)
-        leds[i].g = 255;
-      else if (leds[i].g + Color.g < 0)
-        leds[i].g = 0;
-      else 
-        leds[i].g = leds[i].g + Color.g;
-
-      if (leds[i].b + Color.b > 255)
-        leds[i].b = 255;
-      else if (leds[i].b + Color.b < 0)
-        leds[i].b = 0;
-      else 
-        leds[i].b = leds[i].b + Color.b;  
+  if (twoDirections == false) {
+    //Decides how many of the LEDs will be lit
+    curshow = fscale(MIC_LOW, MIC_HIGH, 0.0, (float)NUM_LEDS, (float)avg, -1);
+  
+    /*Set the different leds. Control for too high and too low values.
+            Fun thing to try: Dont account for overflow in one direction, 
+      some interesting light effects appear! */
+    for (int i = 0; i < NUM_LEDS; i++) 
+      //The leds we want to show
+      if (i < curshow) {
+        if (leds[i].r + Color.r > 255)
+          leds[i].r = 255;
+        else if (leds[i].r + Color.r < 0)
+          leds[i].r = 0;
+        else
+          leds[i].r = leds[i].r + Color.r;
+            
+        if (leds[i].g + Color.g > 255)
+          leds[i].g = 255;
+        else if (leds[i].g + Color.g < 0)
+          leds[i].g = 0;
+        else 
+          leds[i].g = leds[i].g + Color.g;
+  
+        if (leds[i].b + Color.b > 255)
+          leds[i].b = 255;
+        else if (leds[i].b + Color.b < 0)
+          leds[i].b = 0;
+        else 
+          leds[i].b = leds[i].b + Color.b;  
+        
+      //All the other LEDs begin their fading journey to eventual total darkness
+      } else {
+        leds[i] = CRGB(leds[i].r/fade_scale, leds[i].g/fade_scale, leds[i].b/fade_scale);
+      }
+    FastLED.show(); 
+  } else {
+    int middle = NUM_LEDS / 2;
+    //Decides how many of the LEDs will be lit
+    curshow = fscale(MIC_LOW, MIC_HIGH, 0.0, (float)middle, (float)avg, -1);
+  
+    /*Set the different leds. Control for too high and too low values.
+            Fun thing to try: Dont account for overflow in one direction, 
+      some interesting light effects appear! */
       
-    //All the other LEDs begin their fading journey to eventual total darkness
-    } else {
-      leds[i] = CRGB(leds[i].r/fade_scale, leds[i].g/fade_scale, leds[i].b/fade_scale);
+    for (int i = 0; i < middle ; i++){
+      //The leds we want to show
+      if (i < curshow) {
+        if (leds[middle+i].r + Color.r > 255)
+          leds[middle+i].r = 255;
+        else if (leds[middle +i].r + Color.r < 0)
+          leds[middle+i].r = 0;
+        else
+          leds[middle+i].r = leds[middle+i].r + Color.r;
+            
+        if (leds[middle+i].g + Color.g > 255)
+          leds[middle+i].g = 255;
+        else if (leds[middle+i].g + Color.g < 0)
+          leds[middle+i].g = 0;
+        else 
+          leds[middle+i].g = leds[middle+i].g + Color.g;
+  
+        if (leds[middle+i].b + Color.b > 255)
+          leds[middle+i].b = 255;
+        else if (leds[middle+i].b + Color.b < 0)
+          leds[middle+i].b = 0;
+        else 
+          leds[middle+i].b = leds[middle+i].b + Color.b;  
+        
+      //All the other LEDs begin their fading journey to eventual total darkness
+      } else {
+        leds[middle+i] = CRGB(leds[middle+i].r/fade_scale, leds[middle+i].g/fade_scale, leds[middle+i].b/fade_scale);
+      }
+      leds[middle - i] = leds[middle + i];
     }
-  FastLED.show(); 
+    FastLED.show();
+  }
 }
 //Compute average of a int array, given the starting pointer and the length
 int compute_average(int *avgs, int len) {
