@@ -110,7 +110,7 @@ int selectedMode = 2;
 
 void setup() {
   strip.begin();
-  strip.setBrightness(50);
+  
   strip.show(); // Initialize all pixels to 'off'
   Serial.begin(9600);
 
@@ -120,7 +120,8 @@ void setup() {
   //disco 
   FastLED.addLeds<NEOPIXEL, LED_PIN>(leds, NUM_LEDS);
   //FastLED.setMaxPowerInVoltsAndMilliamps(5,7000);
-  FastLED.setBrightness(50); 
+  FastLED.setBrightness(80);
+  strip.setBrightness(80); 
   for (int i = 0; i < NUM_LEDS; i++) 
     leds[i] = CRGB(0, 0, 0);
   FastLED.show(); 
@@ -146,7 +147,7 @@ void loop() {
     for (int i = 0; i < NUM_LEDS; i++) 
       leds[i] = CRGB(0, 0, 0);
     
-    if(selectedMode >= 3){
+    if(selectedMode >= 4){ //put number of modes here
       selectedMode = 0;
     } else {
       selectedMode++;
@@ -175,6 +176,9 @@ void loop() {
       twoDirections = true;
       visualize_music(twoDirections);
       break;
+     case 4:
+      twoDirections = false;
+      visualize_music(twoDirections);
     default:
       break;
   }
