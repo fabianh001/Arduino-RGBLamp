@@ -34,5 +34,5 @@ Any other Arduino should be working for this project, too.
 ## Code
 For this project you need to download and install the [FastLED](https://github.com/FastLED/FastLED) library. Refer to the library's [ESP notes](https://github.com/FastLED/FastLED/wiki/ESP8266-notes) to get the library properly working with an ESP.
 
-
+A lot of code for disco mode is based on hansjny's [sound reactive LED strip project](https://github.com/hansjny/Natural-Nerd/blob/master/arduino/soundsread2/sound_reactive.ino). Don't forget to check it out.
 
