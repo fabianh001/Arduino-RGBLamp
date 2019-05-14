@@ -1,7 +1,6 @@
 #include <FastLED.h> //for disco mode
 #include <Adafruit_NeoPixel.h> //other modes
 
-
 //The amount of LEDs in the setup
 #define NUM_LEDS 144
 
