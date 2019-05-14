@@ -30,7 +30,7 @@
 #define NORMAL 2
 
 //How long do we keep the "current average" sound, before restarting the measuring
-#define MSECS 30 * 1000
+#define MSECS 2000 //default is 30 * 1000
 #define CYCLES MSECS / DELAY
 
 /*Sometimes readings are wrong or strange. How much is a reading allowed
