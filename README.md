@@ -21,15 +21,15 @@ Any other Arduino should be working in this project, too.
 
 ## Wiring
 
-![alt text](https://github.com/fabianh001/Arduino-RBGLamp/layout.png)
+![Fritzing](https://github.com/fabianh001/Arduino-RBGLamp/wiring.png)
 
 | ESP Pin       | Description      
-|:-------------:|:-------------:|
-| Vin | 5v power in |
-| GND | Connected to ground |
-| A0 | Microphone data in |
-| D1 | LED Strip data out      |   
-| D6 | push button in      |
+|:-------------:|:----------:|
+| Vin | 5v power in          |
+| GND | connected to ground  |
+| A0  | microphone data in   |
+| D6  | push button in       |
+| D1  | LED strip data out   |   
 
 ## Code
 For this project you need to download and install the [FastLED](https://github.com/FastLED/FastLED) library. Refer to the library's [ESP notes](https://github.com/FastLED/FastLED/wiki/ESP8266-notes) to get the library properly working with an ESP.
