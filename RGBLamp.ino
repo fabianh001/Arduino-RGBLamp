@@ -21,7 +21,7 @@
 #define MIC_HIGH 1024.0
 /** Other macros */
 //How many previous sensor values effects the operating average?
-#define AVGLEN 5
+#define AVGLEN 10
 //How many previous sensor values decides if we are on a peak/HIGH (e.g. in a song)
 #define LONG_SECTOR 20
 
