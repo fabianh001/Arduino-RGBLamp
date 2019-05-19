@@ -100,8 +100,8 @@ void setup() {
   FastLED.setBrightness(80);
 
   //Turn off all LEDs
-  for (int i = 0; i < NUM_LEDS; i++) 
-    leds[i] = CRGB(0, 0, 0);
+  lightOff();
+
   FastLED.show(); 
   delay(1000);
 
@@ -125,10 +125,9 @@ void loop() {
     buttonPressed = true;
 
     //Turn off all LEDs
-    for (int i = 0; i < NUM_LEDS; i++) 
-      leds[i] = CRGB(0, 0, 0);
+    lightOff();
     
-    if(selectedMode >= 4){ //Put number of modes here
+    if(selectedMode >= 5){ //Put number of modes here
       selectedMode = 0;
     } else {
       selectedMode++;
@@ -141,10 +140,11 @@ void loop() {
  
   /* 
   0: cold white light 
-  1:  warm white light
+  1: warm white light
   2: rainbow
   3: disco mode v1
   4: disco mode v2
+  5: light off
   */
 
   switch (selectedMode) {
@@ -162,9 +162,13 @@ void loop() {
       twoDirections = true;
       visualize_music(twoDirections);
       break;
-     case 4:
+    case 4:
       twoDirections = false;
       visualize_music(twoDirections);
+      break;
+    case 5:
+      lightOff();
+      break;
     default:
       break;
   }
@@ -182,6 +186,13 @@ void loop() {
 void lightOn(byte r, byte g, byte b){
   for (int i = 0; i < NUM_LEDS; i++){ 
       leds[i] = CRGB(r, g, b);    
+  }
+  FastLED.show(); 
+}
+
+void lightOff(){
+  for (int i = 0; i < NUM_LEDS; i++){
+    leds[i] = CRGB(0, 0, 0);
   }
   FastLED.show(); 
 }
