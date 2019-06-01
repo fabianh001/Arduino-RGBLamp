@@ -139,35 +139,35 @@ void loop() {
 
  
   /* 
-  0: cold white light 
-  1: warm white light
-  2: rainbow
-  3: disco mode v1
-  4: disco mode v2
-  5: light off
+  0: light off
+  1: cold white light 
+  2: warm white light
+  3: rainbow
+  4: disco mode v1
+  5: disco mode v2
   */
 
   switch (selectedMode) {
-    case 0: 
-      lightOn(255, 250, 250);
+    case 0:
+      lightOff();
       break;
     case 1: 
-      lightOn(255, 147, 41); //Good source: http://planetpixelemporium.com/tutorialpages/light.html
+      lightOn(255, 250, 250);
       break;
     case 2: 
+      lightOn(255, 147, 41); //Good source: http://planetpixelemporium.com/tutorialpages/light.html
+      break;
+    case 3: 
       rainbowCycle(20);
       buttonPressed = false;
       break;
-    case 3: 
+    case 4: 
       twoDirections = true;
       visualize_music(twoDirections);
       break;
-    case 4:
+    case 5:
       twoDirections = false;
       visualize_music(twoDirections);
-      break;
-    case 5:
-      lightOff();
       break;
     default:
       break;
