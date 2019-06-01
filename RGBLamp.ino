@@ -21,7 +21,7 @@
 #define MIC_HIGH 1024.0
 /** Other macros */
 //How many previous sensor values effects the operating average?
-#define AVGLEN 5
+#define AVGLEN 20
 //How many previous sensor values decides if we are on a peak/HIGH (e.g. in a song)
 #define LONG_SECTOR 20
 
@@ -30,12 +30,12 @@
 #define NORMAL 2
 
 //How long do we keep the "current average" sound, before restarting the measuring
-#define MSECS 2000 //default is 30 * 1000
+#define MSECS 500 //default is 30 * 1000
 #define CYCLES MSECS / DELAY
 
 /*Sometimes readings are wrong or strange. How much is a reading allowed
 to deviate from the average to not be discarded? **/
-#define DEV_THRESH 0.8
+#define DEV_THRESH 1 //0.8
 
 float fscale( float originalMin, float originalMax, float newBegin, float newEnd, float inputValue, float curve);
 void insert(int val, int *avgs, int len);
@@ -88,7 +88,7 @@ boolean twoDirections;
 //Boolean indicating if button was pressed
 boolean buttonPressed = false;
 //Intial mode we have when starting up
-int selectedMode = 2;
+int selectedMode = 5;
 
 void setup() {
   Serial.begin(9600);
@@ -100,8 +100,8 @@ void setup() {
   FastLED.setBrightness(80);
 
   //Turn off all LEDs
-  for (int i = 0; i < NUM_LEDS; i++) 
-    leds[i] = CRGB(0, 0, 0);
+  lightOff();
+
   FastLED.show(); 
   delay(1000);
 
@@ -125,10 +125,9 @@ void loop() {
     buttonPressed = true;
 
     //Turn off all LEDs
-    for (int i = 0; i < NUM_LEDS; i++) 
-      leds[i] = CRGB(0, 0, 0);
+    lightOff();
     
-    if(selectedMode >= 4){ //Put number of modes here
+    if(selectedMode >= 5){ //Put number of modes here
       selectedMode = 0;
     } else {
       selectedMode++;
@@ -141,15 +140,18 @@ void loop() {
  
   /* 
   0: cold white light 
-  1:  warm white light
+  1: warm white light
   2: rainbow
   3: disco mode v1
   4: disco mode v2
+  5: light off
   */
 
   switch (selectedMode) {
     case 0: 
+      FastLED.setBrightness(50);
       lightOn(255, 250, 250);
+      FastLED.setBrightness(80);
       break;
     case 1: 
       lightOn(255, 147, 41); //Good source: http://planetpixelemporium.com/tutorialpages/light.html
@@ -162,9 +164,14 @@ void loop() {
       twoDirections = true;
       visualize_music(twoDirections);
       break;
-     case 4:
+    case 4:
       twoDirections = false;
       visualize_music(twoDirections);
+      break;
+    case 5:
+      lightOff();
+      break;
+
     default:
       break;
   }
@@ -182,6 +189,13 @@ void loop() {
 void lightOn(byte r, byte g, byte b){
   for (int i = 0; i < NUM_LEDS; i++){ 
       leds[i] = CRGB(r, g, b);    
+  }
+  FastLED.show(); 
+}
+
+void lightOff(){
+  for (int i = 0; i < NUM_LEDS; i++){
+    leds[i] = CRGB(0, 0, 0);
   }
   FastLED.show(); 
 }

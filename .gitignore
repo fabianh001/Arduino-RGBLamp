@@ -1,11 +1,4 @@
-#Fritzing file#
-.fzz
-#json and other stuff#
-.json
-.bin
 
-# OS generated files #
-######################
 .DS_Store
 .DS_Store?
 ._*
@@ -13,3 +6,8 @@
 .Trashes
 ehthumbs.db
 Thumbs.db
+RGBLAMP.fzz
+.vscode/*
+.json
+.bin
+.fzz
