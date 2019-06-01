@@ -152,7 +152,7 @@ void loop() {
       lightOn(255, 250, 250);
       break;
     case 1: 
-      FastLED.setBrightness(70);
+      FastLED.setBrightness(50);
       lightOn(255, 147, 41); //Good source: http://planetpixelemporium.com/tutorialpages/light.html
       FastLED.setBrightness(80);
       break;
