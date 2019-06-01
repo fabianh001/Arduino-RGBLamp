@@ -149,12 +149,12 @@ void loop() {
 
   switch (selectedMode) {
     case 0: 
+      FastLED.setBrightness(50);
       lightOn(255, 250, 250);
+      FastLED.setBrightness(80);
       break;
     case 1: 
-      FastLED.setBrightness(50);
       lightOn(255, 147, 41); //Good source: http://planetpixelemporium.com/tutorialpages/light.html
-      FastLED.setBrightness(80);
       break;
     case 2: 
       rainbowCycle(20);
