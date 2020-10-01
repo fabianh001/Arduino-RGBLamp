@@ -4,6 +4,10 @@ This repository is about a nice lamp I made for my desk. My lamp features severa
 The project is based on the ESP8266 Node MCU v1 and a WS2812 LED strip. </br>
 Any other Arduino should be working for this project fine, too. </br>
 
+### Demo Video
+
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/5EeEVwkg_88/0.jpg)](https://www.youtube.com/watch?v=5EeEVwkg_88)
+
 ## Part List
 
 - [ESP Node MCU v1](https://aliexpress.com/item/ESP8266-CH340G-CH340-G-NodeMcu-V3-Lua-Wireless-WIFI-Module-Connector-Development-Board-Based-ESP-12E/32800966224.html)
@@ -19,17 +23,17 @@ Any other Arduino should be working for this project fine, too. </br>
 - 1000μF Capacitor
 
 ## Wiring
-&nbsp; 
+&nbsp;
 
 ![Fritzing](https://github.com/fabianh001/Arduino-RGBLamp/blob/master/fritzing.png)
 
-| ESP Pin       | Description      
+| ESP Pin       | Description
 |:-------------:|:----------:|
 | Vin | 5v power in          |
 | GND | connected to ground  |
 | A0  | microphone data in   |
 | D6  | push button in       |
-| D1  | LED strip data out   |   
+| D1  | LED strip data out   |
 
 ## Code
 For this project you need to download and install the [FastLED](https://github.com/FastLED/FastLED) library. Refer to the library's [ESP notes](https://github.com/FastLED/FastLED/wiki/ESP8266-notes) to get the library properly working with an ESP.
