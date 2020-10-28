@@ -40,3 +40,4 @@ For this project you need to download and install the [FastLED](https://github.c
 
 The original repository I used for the lamp's disco mode is hansjny's [sound reactive LED strip project](https://github.com/hansjny/Natural-Nerd/blob/master/arduino/soundsread2/sound_reactive.ino). Don't forget to check it out.
 
+# HAVE FUN!
